@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Officer from "../models/Officer.js";
 
@@ -6,7 +6,7 @@ import Officer from "../models/Officer.js";
 export const registerOfficer = async (req, res) => {
     try {
         const { firstName, lastName, email, password, role, badgeNumber, rank, stationAssigned, phoneNumber } = req.body;
-        
+
         // Check if the Officer already exists
         const existingOfficer = await Officer.findOne({ email });
         if (existingOfficer) {
