@@ -59,7 +59,7 @@ const FIRRegistration = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await fetch('http://localhost:3001/fir/', {
+                const response = await fetch('https://intellifir-1.onrender.com/fir/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

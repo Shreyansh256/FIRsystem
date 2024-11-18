@@ -32,7 +32,7 @@ const RegisterUser = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
                 console.log(values);
-                const response = await axios.post('http://localhost:3001/auth/register', values);
+                const response = await axios.post('https://intellifir-1.onrender.com/auth/register', values);
                 console.log('User registered:', response.data);
                 window.location.reload();
                 resetForm();

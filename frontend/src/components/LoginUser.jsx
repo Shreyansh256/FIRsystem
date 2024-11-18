@@ -26,7 +26,7 @@ const LoginUser = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await axios.post('http://localhost:3001/auth/login', values);
+                const response = await axios.post('https://intellifir-1.onrender.com/auth/login', values);
 
                 const { user, token } = response.data;
 

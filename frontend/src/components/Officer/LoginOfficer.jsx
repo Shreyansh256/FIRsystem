@@ -22,7 +22,7 @@ const LoginOfficer = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await axios.post('http://localhost:3001/officer/login', values);
+                const response = await axios.post('https://intellifir-1.onrender.com/officer/login', values);
 
                 const { userOfficer, token } = response.data;
                 console.log("hi", { officer: userOfficer, token });

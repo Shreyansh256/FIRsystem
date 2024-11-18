@@ -29,7 +29,7 @@ const RegisterOfficer = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await axios.post('http://localhost:3001/officer/register', values);
+                const response = await axios.post('https://intellifir-1.onrender.com/officer/register', values);
                 if (response.status === 201) {
                     console.log('Officer registered successfully');
                     resetForm();
