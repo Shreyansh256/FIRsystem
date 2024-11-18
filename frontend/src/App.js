@@ -1,26 +1,45 @@
 import './App.css';
-import Navbar from './components/Navbar/Navbar';
-import Box from '@mui/material/Box';
+import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
+import HomePage from './pages/HomePage/HomePage.jsx';
+import FIRRegistration from './components/RegisterFIR/RegisterFIR.jsx'
+import LoginPage from './pages/LoginPage/LoginPage.jsx';
+import { useSelector } from 'react-redux';
+import OfficerLoginPage from './pages/OfficerLoginPage/OfficerLoginPage';
+import FIRList from './pages/FetchFIRs';
+import FAQs from './components/FAQS/FAQS';
+import IPCDetails from './components/IPCs/IPCDetails';
 
 function App() {
+  const token = useSelector((state) => state.token);
+  const isAuth = Boolean(token && token !== '');
+
   return (
-    <div className="App">
-      <Navbar />
-      <h1 className='title'>
-        IntelliFIR
-      </h1>
-      <Box
-        sx={{
-          width: '100%',
-          height: '400px',
-          backgroundImage: `url("../public/assets/FIR_StockImage_1.jpeg")`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <h1>hi  </h1>
-      </Box>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/officer" element={<OfficerLoginPage />} />
+        <Route
+          path="/home"
+          element={isAuth ? <HomePage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/fir"
+          element={isAuth ? <FIRRegistration /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/fetchFIRs"
+          element={isAuth ? <FIRList /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/faqs"
+          element={isAuth ? <FAQs /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/ipc-details"
+          element={isAuth ? <IPCDetails /> : <Navigate to="/" />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
