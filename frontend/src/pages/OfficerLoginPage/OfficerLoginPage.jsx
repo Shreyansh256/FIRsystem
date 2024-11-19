@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import LoginOfficer from '../../components/Officer/LoginOfficer.jsx';
 import RegisterOfficer from '../../components/Officer/RegisterOfficer.jsx';
 import QuoteCard from '../../components/QuoteCard/QuoteCard.jsx'; // Assuming you already have QuoteCard.jsx
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { ReactComponent as MySvgImage } from "../../assets/login.svg";
 import './OfficerLoginPage.css'; // Add CSS file for styling
 
 function OfficerLoginPage() {
     const [isRegistering, setIsRegistering] = useState(false);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     return (
         <div className="officer-login-page">
