@@ -36,6 +36,7 @@ const RegisterUser = () => {
         onSubmit: async (values, { resetForm }) => {
             try {
                 const response = await axios.post('https://intellifir-1.onrender.com/auth/register', values);
+                console.log(response);
                 dispatch(
                     showToast({
                         message: 'User registered successfully!',
