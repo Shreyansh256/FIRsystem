@@ -1,17 +1,39 @@
 import './App.css';
 import { BrowserRouter, Navigate, Routes, Route } from "react-router-dom";
 import HomePage from './pages/HomePage/HomePage.jsx';
-import FIRRegistration from './components/RegisterFIR/RegisterFIR.jsx'
+import FIRRegistration from './components/RegisterFIR/RegisterFIR.jsx';
 import LoginPage from './pages/LoginPage/LoginPage.jsx';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import OfficerLoginPage from './pages/OfficerLoginPage/OfficerLoginPage';
 import FIRList from './pages/FetchFIRs';
 import FAQs from './components/FAQS/FAQS';
 import IPCDetails from './components/IPCs/IPCDetails';
+import { ToastContainer, toast } from 'react-toastify';
+import { hideToast } from './redux/slices/storeJwt/toastSlice'; // Import hideToast action
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from 'react';
 
 function App() {
-  const token = useSelector((state) => state.token);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);  // Ensure you're accessing the correct part of state
   const isAuth = Boolean(token && token !== '');
+
+  // Access toast state
+  const { message, type, isVisible } = useSelector((state) => state.toast);
+
+  // Show toast notification when it is visible
+  useEffect(() => {
+    if (isVisible) {
+      if (type === 'success') {
+        toast.success(message);
+      } else if (type === 'error') {
+        toast.error(message);
+      }
+
+      // After showing the toast, hide it
+      dispatch(hideToast());
+    }
+  }, [isVisible, message, type, dispatch]);
 
   return (
     <BrowserRouter>
@@ -39,6 +61,20 @@ function App() {
           element={isAuth ? <IPCDetails /> : <Navigate to="/" />}
         />
       </Routes>
+
+      {/* Global ToastContainer to handle global toasts */}
+      <ToastContainer
+        position="top-left"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </BrowserRouter>
   );
 }

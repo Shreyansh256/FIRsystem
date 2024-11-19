@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setLogin } from '../redux/slices/storeJwt/storeJwt.js';
+import { showToast } from '../redux/slices/storeJwt/toastSlice'; // Import showToast
 import { TextField, Button } from '@mui/material';
 
 const LoginUser = () => {
@@ -25,18 +26,33 @@ const LoginUser = () => {
                 .required('Password is required'),
         }),
         onSubmit: async (values, { resetForm }) => {
+            // Dispatch loading toast
+            dispatch(showToast({
+                message: "Logging in, please wait...",
+                type: "info",
+            }));
+
             try {
                 const response = await axios.post('https://intellifir-1.onrender.com/auth/login', values);
 
                 const { user, token } = response.data;
-
+                // console.log({ user, token });
                 dispatch(setLogin({ user, token }));
 
-                console.log('User logged in:', response.data);
-                resetForm();
+                // Dispatch success toast
+                dispatch(showToast({
+                    message: "Login successful!",
+                    type: "success",
+                }));
 
+                resetForm();
                 navigate('/home');
             } catch (error) {
+                // Dispatch error toast
+                dispatch(showToast({
+                    message: error.response?.data?.message || 'Login failed. Please check your credentials.',
+                    type: "error",
+                }));
                 console.error('Error logging in user:', error.response?.data || error.message);
             }
         },

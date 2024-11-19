@@ -3,15 +3,17 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { ReactComponent as MySvgImage } from "../../assets/registerFIR.svg";
-import './Register.css'; // Import the CSS file
+import { useDispatch } from 'react-redux';
+import { showToast } from '../../redux/slices/storeJwt/toastSlice'; // Import the toast action
+import './Register.css';
 import Navbar from '../Navbar/Navbar';
-
 
 const FIRRegistration = () => {
     const [isRecording, setIsRecording] = useState(false);
     const [speechSupported, setSpeechSupported] = useState(true);
     const [recognition, setRecognition] = useState(null);
-    const [language, setLanguage] = useState('en-US'); // Default language set to English (US)
+    const [language, setLanguage] = useState('en-US');
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -24,7 +26,7 @@ const FIRRegistration = () => {
         } else {
             setSpeechSupported(false);
         }
-    }, [language]); // Reinitialize recognition when the language changes
+    }, [language]);
 
     const formik = useFormik({
         initialValues: {
@@ -58,6 +60,12 @@ const FIRRegistration = () => {
                 .max(500, 'Complaint cannot exceed 500 characters'),
         }),
         onSubmit: async (values, { resetForm }) => {
+            // Show loading toast
+            dispatch(showToast({
+                message: "Registering FIR, please wait...",
+                type: "info",
+            }));
+
             try {
                 const response = await fetch('https://intellifir-1.onrender.com/fir/', {
                     method: 'POST',
@@ -66,15 +74,25 @@ const FIRRegistration = () => {
                     },
                     body: JSON.stringify(values),
                 });
+
                 if (response.ok) {
-                    alert('FIR Registered Successfully');
+                    dispatch(showToast({
+                        message: "FIR Registered Successfully!",
+                        type: "success",
+                    }));
                     resetForm();
                 } else {
                     const error = await response.json();
-                    alert('Error: ' + error.message);
+                    dispatch(showToast({
+                        message: error.message || "Failed to register FIR.",
+                        type: "error",
+                    }));
                 }
             } catch (err) {
-                alert('Error submitting FIR');
+                dispatch(showToast({
+                    message: "Error submitting FIR. Please try again later.",
+                    type: "error",
+                }));
             }
         },
     });
@@ -85,7 +103,7 @@ const FIRRegistration = () => {
                 recognition.stop();
                 setIsRecording(false);
             } else {
-                recognition.lang = language; // Update language before starting
+                recognition.lang = language;
                 recognition.start();
                 setIsRecording(true);
 
@@ -95,7 +113,10 @@ const FIRRegistration = () => {
                 };
 
                 recognition.onerror = (event) => {
-                    alert('Speech recognition error: ' + event.error);
+                    dispatch(showToast({
+                        message: "Speech recognition error: " + event.error,
+                        type: "error",
+                    }));
                 };
 
                 recognition.onend = () => {
@@ -124,13 +145,6 @@ const FIRRegistration = () => {
                                 value={formik.values.aadhar_number}
                                 error={formik.touched.aadhar_number && Boolean(formik.errors.aadhar_number)}
                                 helperText={formik.touched.aadhar_number && formik.errors.aadhar_number}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        mx: '8px',
-                                        my: '8px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                             <TextField
                                 label="Name"
@@ -141,13 +155,6 @@ const FIRRegistration = () => {
                                 value={formik.values.name}
                                 error={formik.touched.name && Boolean(formik.errors.name)}
                                 helperText={formik.touched.name && formik.errors.name}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        mx: '8px',
-                                        my: '8px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                         </div>
 
@@ -163,13 +170,6 @@ const FIRRegistration = () => {
                                 value={formik.values.age}
                                 error={formik.touched.age && Boolean(formik.errors.age)}
                                 helperText={formik.touched.age && formik.errors.age}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        mx: '8px',
-                                        my: '8px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                             <TextField
                                 label="Mobile Number"
@@ -180,13 +180,6 @@ const FIRRegistration = () => {
                                 value={formik.values.mobile_number}
                                 error={formik.touched.mobile_number && Boolean(formik.errors.mobile_number)}
                                 helperText={formik.touched.mobile_number && formik.errors.mobile_number}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        mx: '8px',
-                                        my: '8px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                         </div>
 
@@ -201,13 +194,6 @@ const FIRRegistration = () => {
                                 value={formik.values.address}
                                 error={formik.touched.address && Boolean(formik.errors.address)}
                                 helperText={formik.touched.address && formik.errors.address}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        mx: '8px',
-                                        my: '8px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                         </div>
 
@@ -224,13 +210,6 @@ const FIRRegistration = () => {
                                 value={formik.values.complaint}
                                 error={formik.touched.complaint && Boolean(formik.errors.complaint)}
                                 helperText={formik.touched.complaint && formik.errors.complaint}
-                                sx={{
-                                    '& .MuiInputBase-input': {
-                                        color: '#BFD7FF',
-                                        paddingBottom: '10px',
-                                        paddingLeft: '10px',
-                                    },
-                                }}
                             />
                         </div>
 
@@ -276,8 +255,6 @@ const FIRRegistration = () => {
                             Submit
                         </Button>
                     </form>
-
-
                 </div>
                 <div>
                     <MySvgImage />

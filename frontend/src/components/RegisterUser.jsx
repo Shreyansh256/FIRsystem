@@ -3,8 +3,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { TextField, Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { showToast } from '../redux/slices/storeJwt/toastSlice';
 
 const RegisterUser = () => {
+    const dispatch = useDispatch();
+
     const formik = useFormik({
         initialValues: {
             firstName: '',
@@ -31,20 +35,37 @@ const RegisterUser = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                console.log(values);
                 const response = await axios.post('https://intellifir-1.onrender.com/auth/register', values);
-                console.log('User registered:', response.data);
-                window.location.reload();
+                dispatch(
+                    showToast({
+                        message: 'User registered successfully!',
+                        type: 'success',
+                    })
+                );
                 resetForm();
             } catch (error) {
-                console.error('Error registering user:', error.response?.data || error.message);
+                if (error.response?.data?.error?.includes('E11000 duplicate key error')) {
+                    dispatch(
+                        showToast({
+                            message: 'Email ID already in use!',
+                            type: 'error',
+                        })
+                    );
+                } else {
+                    dispatch(
+                        showToast({
+                            message: error.response?.data?.msg || error.message || 'An error occurred',
+                            type: 'error',
+                        })
+                    );
+                }
             }
         },
     });
 
     return (
         <div style={{ maxWidth: '400px', margin: '0 auto', textAlign: 'center' }}>
-            <h1 className=''>Register User</h1>
+            <h1>Register User</h1>
             <form onSubmit={formik.handleSubmit}>
                 {/* First Name and Last Name side by side */}
                 <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
@@ -71,13 +92,6 @@ const RegisterUser = () => {
                         value={formik.values.lastName}
                         error={formik.touched.lastName && Boolean(formik.errors.lastName)}
                         helperText={formik.touched.lastName && formik.errors.lastName}
-                        sx={{
-                            '& .MuiInputBase-input': {
-                                mx: '8px',
-                                my: '8px',
-                                paddingLeft: '10px',
-                            },
-                        }}
                     />
                 </div>
 

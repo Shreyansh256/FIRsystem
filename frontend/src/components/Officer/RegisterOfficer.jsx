@@ -3,8 +3,12 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { TextField, Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { showToast } from '../../redux/slices/storeJwt/toastSlice'; // Adjust the path based on your project structure
 
 const RegisterOfficer = () => {
+    const dispatch = useDispatch();
+
     const formik = useFormik({
         initialValues: {
             firstName: '',
@@ -31,13 +35,39 @@ const RegisterOfficer = () => {
             try {
                 const response = await axios.post('https://intellifir-1.onrender.com/officer/register', values);
                 if (response.status === 201) {
-                    console.log('Officer registered successfully');
+                    dispatch(
+                        showToast({
+                            message: 'Officer registered successfully!',
+                            type: 'success',
+                        })
+                    );
                     resetForm();
                 } else {
-                    console.log(response.data.message);
+                    dispatch(
+                        showToast({
+                            message: response.data.message || 'Failed to register officer',
+                            type: 'error',
+                        })
+                    );
                 }
             } catch (error) {
-                console.error('Error registering officer:', error.response?.data || error.message);
+                // Handle duplicate key error for email
+                console.log(error.response.data.message);
+                if (error.response?.data?.error?.includes('E11000 duplicate key error')) {
+                    dispatch(
+                        showToast({
+                            message: 'Email ID already in use!',
+                            type: 'error',
+                        })
+                    );
+                } else {
+                    dispatch(
+                        showToast({
+                            message: error.response?.data?.message || error.message || 'An error occurred',
+                            type: 'error',
+                        })
+                    );
+                }
             }
         },
     });

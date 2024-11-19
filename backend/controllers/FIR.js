@@ -4,7 +4,6 @@ import { spawn } from 'child_process';
 import { v4 as uuidv4 } from 'uuid'; // To generate unique fir_id
 import console from 'console';
 
-
 // Register FIR
 
 // Controller function to register an FIR
@@ -28,8 +27,6 @@ export const registerFIR = async (req, res) => {
             ipc_section += data.toString();
 
         });
-
-
 
         // Handle any errors from the Python script
         pythonProcess.stderr.on('data', (data) => {

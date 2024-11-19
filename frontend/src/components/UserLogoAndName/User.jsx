@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 const User = () => {
     const user = useSelector((state) => {
         console.log("State is: ", state);
-        if (state.officer && state.officer.role === 'admin') {
-            return state.officer; // Return officer details if the role is admin
+        if (state.auth.officer && state.auth.officer.role === 'admin') {
+            return state.auth.officer; // Return officer details if the role is admin
         } else {
-            return state.user; // Fallback to user details
+            return state.auth.user; // Fallback to user details
         }
     });
     console.log("User is: ", user);

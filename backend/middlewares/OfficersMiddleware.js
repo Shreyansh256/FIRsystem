@@ -7,10 +7,10 @@ export const isOfficer = async (req, res, next) => {
         const token = req.header("Authorization").replace("Bearer ", "");
         console.log(token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+        console.log(decoded.id)
         // Fetch the user from the database using the decoded user ID
         const officer = await Officer.findById(decoded.id);
-
+        console.log(officer);
         if (!officer) {
             return res.status(401).json({ message: "Officer not found" });
         }
@@ -24,6 +24,7 @@ export const isOfficer = async (req, res, next) => {
 
         next(); // Allow the request to proceed to the next middleware or route handler
     } catch (error) {
-        res.status(401).json({ message: "Unauthorized" });
+        console.log(error);
+        res.status(401).json({ message: "Unauthorized!" });
     }
 };

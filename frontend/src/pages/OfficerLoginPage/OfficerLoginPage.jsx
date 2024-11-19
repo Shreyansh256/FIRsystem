@@ -19,7 +19,7 @@ function OfficerLoginPage() {
                     onClick={() => setIsRegistering(!isRegistering)}
                     className="toggle-button"
                 >
-                    {!isRegistering ? 'Already have an account? Login!' : 'Create an Account!'}
+                    {!isRegistering ? 'Create an Account!' : 'Already have an account? Login!'}
                 </Button>
             </div>
             <div className='officer-info'>

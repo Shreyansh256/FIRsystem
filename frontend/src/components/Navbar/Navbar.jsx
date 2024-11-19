@@ -13,7 +13,7 @@ import './Navbar.css';
 function Navbar() {
 
     const navigate = useNavigate();
-    const officerRole = useSelector((state) => state.officer?.role); // Adjust 'officer.role' based on your state structure
+    const officerRole = useSelector((state) => state.auth.officer?.role); // Adjust 'officer.role' based on your state structure
 
     return (
         <Box component="navbar" sx={{

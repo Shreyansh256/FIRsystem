@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.post("/login", loginOfficer);
 router.post("/register", registerOfficer);
-router.get("./access-FIR", isOfficer, fetchFIRs);
+// router.get("/access-FIR", isOfficer, fetchFIRs);
 
 export default router;

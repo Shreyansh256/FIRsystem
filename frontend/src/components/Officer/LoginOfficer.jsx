@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setOfficerLogin } from '../../redux/slices/storeJwt/storeJwt.js';
+import { showToast } from '../../redux/slices/storeJwt/toastSlice'; // Adjust path as per your project structure
 import { TextField, Button, Typography } from '@mui/material';
 
 const LoginOfficer = () => {
@@ -25,17 +26,35 @@ const LoginOfficer = () => {
                 const response = await axios.post('https://intellifir-1.onrender.com/officer/login', values);
 
                 const { userOfficer, token } = response.data;
-                console.log("hi", { officer: userOfficer, token });
-                // Save the officer details and token to Redux
-                dispatch(setOfficerLogin({ user: userOfficer, token })); // Ensure the keys match your slice logic
 
-                console.log('Login successful:', userOfficer);
+                // Save the officer details and token to Redux
+                dispatch(setOfficerLogin({ user: userOfficer, token }));
+
+                // Show success toast
+                dispatch(
+                    showToast({
+                        message: 'Login successful!',
+                        type: 'success',
+                    })
+                );
+
                 resetForm();
 
                 // Redirect to home page after successful login
                 navigate('/home');
             } catch (error) {
-                console.error('Error logging in officer:', error.response?.data || error.message);
+                const errorMessage =
+                    error.response?.data?.msg || error.message || 'An error occurred during login';
+
+                // Show error toast
+                dispatch(
+                    showToast({
+                        message: errorMessage,
+                        type: 'error',
+                    })
+                );
+
+                console.error('Error logging in officer:', errorMessage);
             }
         },
     });
@@ -87,8 +106,6 @@ const LoginOfficer = () => {
                     Login
                 </Button>
             </form>
-
-
         </div>
     );
 };
