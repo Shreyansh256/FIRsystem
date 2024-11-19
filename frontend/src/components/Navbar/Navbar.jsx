@@ -1,6 +1,4 @@
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import { useSelector } from 'react-redux';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';

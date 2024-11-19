@@ -52,7 +52,7 @@ const FIRList = () => {
         };
 
         fetchFirs();
-    }, []);
+    }, [token]);
 
     return (
         <Box sx={{ padding: '2rem' }}>
