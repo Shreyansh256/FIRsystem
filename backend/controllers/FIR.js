@@ -14,12 +14,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export const registerFIR = async (req, res) => {
     try {
-        console.log("Processing FIR registration...");
+        // console.log("Processing FIR registration...");
         const { aadhar_number, name, address, age, mobile_number, complaint } = req.body;
 
         // Generate unique FIR ID
         const fir_id = `FIR${new Date().toISOString().replace(/[-:.TZ]/g, '')}${Math.floor(Math.random() * 1000)}`;
-        console.log("Complaint:", complaint);
+        // console.log("Complaint:", complaint);
 
         // Initialize the generative model
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -37,7 +37,7 @@ export const registerFIR = async (req, res) => {
 
         const result = await model.generateContent(prompt);
         const ipc_section = result.response.text().trim() || "Not Specified";
-        console.log("IPC Section:", ipc_section);
+        // console.log("IPC Section:", ipc_section);
 
         // Get the current date and time
         const date = new Date().toISOString();
@@ -57,12 +57,12 @@ export const registerFIR = async (req, res) => {
 
         // Save the FIR document to the database
         await newFIR.save();
-        console.log("New FIR saved:", newFIR);
+        // console.log("New FIR saved:", newFIR);
 
         // Send the saved FIR as the response
         res.status(201).json(newFIR);
     } catch (error) {
-        console.error("Error registering FIR:", error);
+        // console.error("Error registering FIR:", error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
