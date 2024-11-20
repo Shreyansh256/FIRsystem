@@ -111,3 +111,8 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #788BFF;
 }
+
+
+.give-padding{
+    padding-right: 0.5vw;
+}

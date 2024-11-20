@@ -62,7 +62,7 @@ const IPCDetails = () => {
                             id={`panel${index}-header`}
                             sx={{
                                 '& .MuiAccordionSummary-content': {
-                                    padding: '16px 24px',
+                                    padding: '8px 50px',
                                 },
                                 '&:hover': {
                                     backgroundColor: 'rgba(255, 255, 255, 0.15)',

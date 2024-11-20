@@ -3,7 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { ReactComponent as MySvgImage } from "../../assets/registerFIR.svg";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; // Import useSelector
 import { showToast } from '../../redux/slices/storeJwt/toastSlice'; // Import the toast action
 import './Register.css';
 import Navbar from '../Navbar/Navbar';
@@ -14,6 +14,13 @@ const FIRRegistration = () => {
     const [recognition, setRecognition] = useState(null);
     const [language, setLanguage] = useState('en-US');
     const dispatch = useDispatch();
+
+    // Get email from Redux state
+
+
+    const email = useSelector((state) =>
+        state.auth?.officer?.email ? state.auth.officer.email : state.auth?.user?.email
+    );
 
     useEffect(() => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -60,6 +67,9 @@ const FIRRegistration = () => {
                 .max(500, 'Complaint cannot exceed 500 characters'),
         }),
         onSubmit: async (values, { resetForm }) => {
+            // Add email to the request body
+            const requestData = { ...values, email };
+
             // Show loading toast
             dispatch(showToast({
                 message: "Registering FIR, please wait...",
@@ -72,7 +82,7 @@ const FIRRegistration = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(values),
+                    body: JSON.stringify(requestData),
                 });
 
                 if (response.ok) {
@@ -131,7 +141,7 @@ const FIRRegistration = () => {
             <Navbar />
 
             <div className='main-div'>
-                <div className="glass-container" >
+                <div className="glass-container">
                     <h2 className='register-title'>Register FIR</h2>
                     <form className="form-tag" onSubmit={formik.handleSubmit}>
                         {/* Aadhar Number and Name */}
@@ -238,7 +248,7 @@ const FIRRegistration = () => {
                                     onClick={handleSpeechToText}
                                     sx={{ mt: 2 }}
                                 >
-                                    {isRecording ? 'Stop Recording' : 'Record Grievance'}
+                                    <i className="fa-solid fa-microphone give-padding"></i>{isRecording ? 'Stop Converting' : 'Live Voice to Text'}
                                 </Button>
                             </>
                         )}

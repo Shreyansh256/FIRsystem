@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { hideToast } from './redux/slices/storeJwt/toastSlice'; // Import hideToast action
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from 'react';
+import MyFirs from './components/MyFirs/MyFirs';
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,10 @@ function App() {
         <Route
           path="/ipc-details"
           element={isAuth ? <IPCDetails /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/my-firs"
+          element={isAuth ? <MyFirs /> : <Navigate to="/" />}
         />
       </Routes>
 

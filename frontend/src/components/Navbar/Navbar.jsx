@@ -10,6 +10,7 @@ import User from '../UserLogoAndName/User';
 import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
+
 function Navbar() {
 
     const navigate = useNavigate();
@@ -40,7 +41,8 @@ function Navbar() {
             }}>
                 <Box
                     component="img"
-                    src="https://images.pexels.com/photos/5669602/pexels-photo-5669602.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src={require('../../assets/favicon-img.png')}
+                    // src="https://images.pexels.com/photos/5669602/pexels-photo-5669602.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="Example"
                     sx={{
                         width: 50,
@@ -81,6 +83,12 @@ function Navbar() {
 
                 <Button className='nav-button' onClick={() => { navigate('/ipc-details') }} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                     Read About IPC
+                    <Fab color="primary" aria-label="add" size="small" sx={{ marginLeft: 1 }}>
+                        <AddIcon />
+                    </Fab>
+                </Button>
+                <Button className='nav-button' onClick={() => { navigate('/my-firs') }} sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    Your FIRs
                     <Fab color="primary" aria-label="add" size="small" sx={{ marginLeft: 1 }}>
                         <AddIcon />
                     </Fab>
