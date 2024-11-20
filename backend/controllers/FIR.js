@@ -2,78 +2,68 @@
 import FIR from '../models/FIR.js';
 import { spawn } from 'child_process';
 import { v4 as uuidv4 } from 'uuid'; // To generate unique fir_id
-import console from 'console';
+import axios from 'axios';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// import console from 'console';
 
 // Register FIR
 
 // Controller function to register an FIR
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
 export const registerFIR = async (req, res) => {
     try {
+        console.log("Processing FIR registration...");
         const { aadhar_number, name, address, age, mobile_number, complaint } = req.body;
 
         // Generate unique FIR ID
         const fir_id = `FIR${new Date().toISOString().replace(/[-:.TZ]/g, '')}${Math.floor(Math.random() * 1000)}`;
-        // console.log({ fir_id, aadhar_number, name, address, age, mobile_number, complaint });
-        // console.log("p1");
+        console.log("Complaint:", complaint);
 
-        // Execute the Python script to get the IPC section
-        const pythonProcess = spawn('python3', ['cnn/files.py', complaint]);
-        let ipc_section = '';
-        // console.log("p2");
+        // Initialize the generative model
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        // Collect the output from the Python script
-        pythonProcess.stdout.on('data', (data) => {
-            // console.log(data.toString());
-            ipc_section += data.toString();
+        // Generate the IPC section using the Gemini model
+        const prompt = `For the Indian context, analyze the following incident and determine the applicable IPC sections:
 
+            Incident: "${complaint}"
+
+            Return the answer strictly in the following format:
+            "IPC Section: {IPC_First}, {IPC_Second}, etc."
+
+            Output only the text in this format, without any explanation or additional information.`;
+
+
+        const result = await model.generateContent(prompt);
+        const ipc_section = result.response.text().trim() || "Not Specified";
+        console.log("IPC Section:", ipc_section);
+
+        // Get the current date and time
+        const date = new Date().toISOString();
+
+        // Create a new FIR document
+        const newFIR = new FIR({
+            fir_id,
+            aadhar_number,
+            name,
+            address,
+            age,
+            mobile_number,
+            complaint,
+            ipc_section,
+            date,
         });
 
-        // Handle any errors from the Python script
-        pythonProcess.stderr.on('data', (data) => {
-            // console.log("p3");
-            console.error(`Python error: ${data.toString()}`);
-            return res.status(500).json({ message: 'Error processing complaint' });
-        });
+        // Save the FIR document to the database
+        await newFIR.save();
+        console.log("New FIR saved:", newFIR);
 
-        pythonProcess.on('close', async (code) => {
-            // console.log("p4");
-
-            if (code !== 0) {
-                return res.status(500).json({ message: 'Python script failed' });
-            }
-
-            // Trim the IPC section and ensure it is clean
-            ipc_section = ipc_section.trim();
-
-            console.log("IPC Section:", ipc_section);
-            // console.log(ipc_section);
-
-            // Get the current date and time
-            const date = new Date().toISOString();
-
-            // Create a new FIR document
-            const newFIR = new FIR({
-                fir_id,
-                aadhar_number,
-                name,
-                address,
-                age,
-                mobile_number,
-                complaint,
-                ipc_section,
-                date,
-            });
-
-            // Save the FIR document to the database
-            await newFIR.save();
-            // console.log(newFIR);
-
-            // Send the saved FIR as the response
-            res.status(201).json(newFIR);
-        });
+        // Send the saved FIR as the response
+        res.status(201).json(newFIR);
     } catch (error) {
-        console.error('Error registering FIR:', error);
-        res.status(500).json({ message: 'Server error' });
+        console.error("Error registering FIR:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
     }
 };
 // Fetch FIR and order them by recent first
