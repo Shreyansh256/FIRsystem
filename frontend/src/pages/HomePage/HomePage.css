@@ -65,19 +65,19 @@
 }
 
 .home-text-headline{
-    color: #5465FF;
+    color: #BFD7FF;
 }
 .home-text-para{
-    color: #5465FF;
+    color: #BFD7FF;
 }
 
 .home-text-mission{
-    color: #5465FF;
+    color: #BFD7FF;
 }
 
 .MuiButton-root.home-fir-button {
     padding-top: 10vh;
-    color: #BFD7FF;
+    color: #5465FF;
     font-size: 1.5rem; /* Increase the font size */
     padding: 12px 24px; /* Adjust the padding for a larger button */
     height: auto; /* Ensure the button height adjusts with the content */
