@@ -33,7 +33,7 @@ const RegisterOfficer = () => {
         }),
         onSubmit: async (values, { resetForm }) => {
             try {
-                const response = await axios.post('https://intellifir-1.onrender.com/officer/register', values);
+                const response = await axios.post('https://firsystem.onrender.com/officer/register', values);
                 if (response.status === 201) {
                     dispatch(
                         showToast({

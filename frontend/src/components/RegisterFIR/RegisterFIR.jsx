@@ -77,7 +77,7 @@ const FIRRegistration = () => {
             }));
 
             try {
-                const response = await fetch('https://intellifir-1.onrender.com/fir/', {
+                const response = await fetch('https://firsystem.onrender.com/fir/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

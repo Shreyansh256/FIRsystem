@@ -25,7 +25,7 @@ const MyFirs = () => {
             }
 
             try {
-                const response = await axios.get(`https://intellifir-1.onrender.com/fir/fetch-my-fir`, {
+                const response = await axios.get(`https://firsystem.onrender.com/fir/fetch-my-fir`, {
                     params: { email }, // Send email as a query parameter
                 });
                 console.log("response is: ", response.data.data);

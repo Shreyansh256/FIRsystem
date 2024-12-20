@@ -33,7 +33,7 @@ const LoginUser = () => {
             }));
 
             try {
-                const response = await axios.post('https://intellifir-1.onrender.com/auth/login', values);
+                const response = await axios.post('https://firsystem.onrender.com/auth/login', values);
 
                 const { user, token } = response.data;
                 // console.log({ user, token });
