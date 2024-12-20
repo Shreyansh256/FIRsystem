@@ -3,7 +3,6 @@
 SmartFIR Portal is an innovative web platform designed to simplify the FIR (First Information Report) registration process. It enables users to file complaints online with enhanced accessibility and provides law enforcement officers with admin privileges to streamline FIR management. 
 
 ---
-
 ## 🚀 Features
 - **Secure Login System**: JWT authentication with a 1-hour expiry ensures secure user sessions and robust access control.
 - **Speech-to-Text Accessibility**: Integrated APIs support multiple languages, simplifying grievance submission and boosting accessibility by 40%.
